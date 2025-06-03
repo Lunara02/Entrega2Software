@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel SIN Autenticación</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-4">
+  <h3>Panel de Pruebas (Sin Autenticación)</h3>
+  
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <h5>Paquetes</h5>
+      <ul class="list-group" id="listaPaquetes">
+        <li class="list-group-item">Cargando...</li>
+      </ul>
+    </div>
+    
+    <div class="col-md-6">
+      <h5>Conductores</h5>
+      <select class="form-select mb-3" id="selectConductor">
+        <option value="">Cargando...</option>
+      </select>
+      
+      <h5>Rutas</h5>
+      <select class="form-select mb-3" id="selectRuta">
+        <option value="">Cargando...</option>
+      </select>
+      
+      <button class="btn btn-primary w-100" onclick="asignarPaquete()">
+        Asignar Paquete
+      </button>
+    </div>
+  </div>
+  
+  <div class="mt-3 p-3 bg-white border rounded" id="respuesta">
+    Esperando acciones...
+  </div>
+</div>
+
+<script>
+  async function fetchData(url, options = {}) {
+    try {
+      const res = await fetch(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers
+        },
+        ...options
+      });
+      return await res.json();
+    } catch (error) {
+      console.error('Error en fetch:', error);
+      throw error;
+    }
+  }
+
+
+  async function cargarDatos() {
+    try {
+      const [paquetes, conductores, rutas] = await Promise.all([
+        fetchData('/api/paquetes/'),
+        fetchData('/api/conductores/'),
+        fetchData('/api/rutas/')
+      ]);
+      
+      mostrarPaquetes(paquetes);
+      mostrarConductores(conductores);
+      mostrarRutas(rutas);
+    } catch (error) {
+      document.getElementById('respuesta').textContent = `Error: ${error.message}`;
+    }
+  }
+
+  function mostrarPaquetes(paquetes) {
+    const lista = document.getElementById('listaPaquetes');
+    lista.innerHTML = '';
+    
+    paquetes.forEach(p => {
+      const li = document.createElement('li');
+      li.className = 'list-group-item';
+      li.textContent = `Paquete ${p.id}`;
+      li.onclick = () => seleccionarPaquete(p.id);
+      lista.appendChild(li);
+    });
+  }
+
+  function mostrarConductores(conductores) {
+    const select = document.getElementById('selectConductor');
+    select.innerHTML = '<option value="">Seleccione conductor</option>';
+    
+    conductores.forEach(c => {
+      const option = document.createElement('option');
+      option.value = c.id;
+      option.textContent = c.nombre;
+      select.appendChild(option);
+    });
+  }
+
+  function mostrarRutas(rutas) {
+    const select = document.getElementById('selectRuta');
+    select.innerHTML = '<option value="">Seleccione ruta</option>';
+    
+    rutas.forEach(r => {
+      const option = document.createElement('option');
+      option.value = r.id;
+      option.textContent = r.nombre || `Ruta ${r.id}`;
+      select.appendChild(option);
+    });
+  }
+
+  let paqueteSeleccionado = null;
+  
+  function seleccionarPaquete(id) {
+    paqueteSeleccionado = id;
+    document.getElementById('respuesta').textContent = `Paquete ${id} seleccionado`;
+  }
+
+  async function asignarPaquete() {
+    const conductorId = document.getElementById('selectConductor').value;
+    const rutaId = document.getElementById('selectRuta').value;
+    
+    if (!paqueteSeleccionado || !conductorId || !rutaId) {
+      alert('Seleccione paquete, conductor y ruta');
+      return;
+    }
+    
+    try {
+      const result = await fetchData(`/api/paquetes/${paqueteSeleccionado}/`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          conductor: conductorId,
+          ruta: rutaId
+        })
+      });
+      
+      document.getElementById('respuesta').textContent = 'Asignación exitosa!';
+      cargarDatos();
+    } catch (error) {
+      document.getElementById('respuesta').textContent = `Error: ${error.message}`;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', cargarDatos);
+</script>
+</body>
+</html>

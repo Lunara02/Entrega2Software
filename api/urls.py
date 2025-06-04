@@ -1,26 +1,30 @@
+# api/urls.py
+
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 from .views import (
-    PaqueteViewSet,
-    ConductorViewSet,
-    RutaViewSet,
+    UsuarioViewSet,
     EstadoViewSet,
-    HistorialEstadoViewSet,
-    login,
-    refresh_token,
-    registrar_usuario
+    RutaViewSet,
+    PaqueteViewSet,
+    HistorialEstadoViewSet
 )
 
+# Creamos el router y registramos los ViewSets
 router = DefaultRouter()
-router.register(r'paquetes', PaqueteViewSet)
-router.register(r'conductores', ConductorViewSet)
-router.register(r'rutas', RutaViewSet)
-router.register(r'estados', EstadoViewSet)
-router.register(r'historial', HistorialEstadoViewSet)
+router.register(r'usuarios', UsuarioViewSet, basename='usuarios')
+router.register(r'estados', EstadoViewSet, basename='estados')
+router.register(r'rutas', RutaViewSet, basename='rutas')
+router.register(r'paquetes', PaqueteViewSet, basename='paquetes')
+router.register(r'historial', HistorialEstadoViewSet, basename='historial')
 
 urlpatterns = [
-    path('login/', login, name='login'),
-    path('registrar/', registrar_usuario, name='registrar'),
-    path('token/refresh/', refresh_token, name='token_refresh'),
+    # Endpoints para obtener/renovar tokens JWT
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    # Incluir todas las rutas generadas por el router
     path('', include(router.urls)),
 ]

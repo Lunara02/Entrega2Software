@@ -1,5 +1,6 @@
 /* Fondo temático con imagen de transporte */
 body {
+  margin-top: 70px; 
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: #000000 url('https://plus.unsplash.com/premium_photo-1669061100284-b2b184166a6d?q=80&w=2033&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
   background-size: cover;
@@ -34,6 +35,10 @@ body {
 
 .navbar {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  top: 0;
 }
 .navbar-brand {
   font-size: 1.5rem;
@@ -146,6 +151,9 @@ button:focus, select:focus {
     color: #fff;
     padding: 1rem;
     text-align: center;
+    bottom: 0px;
+    display: block;
+    
   }
   footer a {
     color: #4caf50;

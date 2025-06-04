@@ -8,57 +8,101 @@ const errorDiv = document.getElementById('error');
 
 // Función para enviar el formulario de login
 document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('login-form');
-    if (!loginForm) return;
+    const API_BASE = window.location.origin + '/api';
 
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        errorDiv.textContent = '';
+    const btnLogin = document.getElementById("btnLogin");
+    const btnRegistro = document.getElementById("btnRegistro");
+    const btnEntrar = document.getElementById("btnEntrar");
+    const btnCrearUsuario = document.getElementById("btnCrearUsuario");
 
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value;
+    const loginForm = document.getElementById("loginForm");
+    const registroForm = document.getElementById("registroForm");
+    const respuesta = document.getElementById("respuesta");
+
+    // Mostrar formulario de login
+    btnLogin.addEventListener("click", () => {
+        loginForm.classList.remove("d-none");
+        registroForm.classList.add("d-none");
+        respuesta.textContent = '';
+    });
+
+    // Mostrar formulario de registro
+    btnRegistro.addEventListener("click", () => {
+        registroForm.classList.remove("d-none");
+        loginForm.classList.add("d-none");
+        respuesta.textContent = '';
+    });
+
+    // Iniciar sesión
+    btnEntrar.addEventListener("click", async () => {
+        const correo = document.getElementById("correo").value.trim();
+        const contrasena = document.getElementById("contrasena").value;
+
+        respuesta.textContent = "Cargando...";
 
         try {
-            const response = await fetch(`${API_BASE}/token/`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+            const res = await fetch(`${API_BASE}/token/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username: correo, password: contrasena })
             });
 
-            if (!response.ok) {
-                const errData = await response.json();
-                errorDiv.textContent = errData.detail || 'Credenciales inválidas.';
+            const data = await res.json();
+
+            if (!res.ok) {
+                respuesta.textContent = data.detail || "Credenciales inválidas.";
                 return;
             }
 
-            const data = await response.json();
-            // Almacena access y refresh en localStorage
-            localStorage.setItem('access_token', data.access);
-            localStorage.setItem('refresh_token', data.refresh);
-
-            // Redirige a /panel/
-            window.location.href = '/panel/';
+            localStorage.setItem("access_token", data.access);
+            localStorage.setItem("refresh_token", data.refresh);
+            respuesta.textContent = "¡Login exitoso! Redirigiendo...";
+            window.location.href = "/panel/";
         } catch (err) {
             console.error(err);
-            errorDiv.textContent = 'Error de conexión.';
+            respuesta.textContent = "Error de conexión al iniciar sesión.";
         }
     });
-});
 
-// Función para cerrar sesión (borrar tokens y redirigir)
-function logout() {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    window.location.href = '/';
-}
+    // Registrar usuario
+    btnCrearUsuario.addEventListener("click", async () => {
+        const nombre = document.getElementById("nombreNuevo").value.trim();
+        const correo = document.getElementById("correoNuevo").value.trim();
+        const clave = document.getElementById("claveNuevo").value;
+        const rol = document.getElementById("rolNuevo").value;
 
-// Si estamos en 'panel.html', asignamos el botón de logout:
-document.addEventListener('DOMContentLoaded', () => {
+        respuesta.textContent = "Registrando...";
+
+        try {
+            const res = await fetch(`${API_BASE}/usuarios/crear/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nombre, correo, clave, rol })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                respuesta.textContent = data.detail || "Error al registrar.";
+                return;
+            }
+
+            respuesta.textContent = "Usuario creado correctamente. Ya puedes iniciar sesión.";
+        } catch (err) {
+            console.error(err);
+            respuesta.textContent = "Error de conexión al registrar.";
+        }
+    });
+
+    // Cerrar sesión (por si lo necesitas en /panel/)
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            logout();
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            window.location.href = '/';
         });
     }
 });
+

@@ -1,5 +1,3 @@
-# backend/maps/services.py
-
 def calcular_ruta(origen, destino):
     """
     Aquí iría la lógica para llamar a la API de Google Maps o similar,

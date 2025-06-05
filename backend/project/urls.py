@@ -9,7 +9,7 @@ urlpatterns = [
 
     # 2) Endpoints de autenticación JWT (Simple JWT),
     #    definidos dentro de la app "users"
-    path('api/users/token/', include('users.urls')),        # TokenObtainPairView + TokenRefreshView
+    # path('api/users/token/', include('users.urls')),        # TokenObtainPairView + TokenRefreshView
     #    Si deseas, podrías separar en:
     # path('api/users/token/', TokenObtainPairView.as_view(), name='token_obtain_pair')
     # path('api/users/token/refresh/', TokenRefreshView.as_view(), name='token_refresh')

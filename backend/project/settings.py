@@ -83,6 +83,9 @@ else:
 LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/panel/'
 
+
+
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',

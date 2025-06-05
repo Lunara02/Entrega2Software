@@ -11,15 +11,28 @@
     <div class="container">
         <h1>Panel de Usuario</h1>
 
-        <!-- Botón para cerrar sesión -->
-        <button id="logout-btn">Cerrar Sesión</button>
+        {# Formulario de logout usando POST al endpoint 'logout' #}
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Cerrar Sesión</button>
+        </form>
 
         <hr>
+
+        {# Secciones de creación de paquete, listado de paquetes, etc.
+           De momento, dejamos la estructura como está, 
+           pero ya no dependerá de auth.js para validar si hay token. #}
 
         <!-- Sección: Crear nuevo paquete -->
         <section>
             <h2>Crear Nuevo Paquete</h2>
-            <form id="crear-paquete-form">
+            {# 
+              Aquí podrías reemplazar este <form> por uno que apunte a una vista Django 
+              (por ejemplo, 'panel/crear-paquete/') que procese el POST para crear el paquete.
+              Si aún no tienes ese endpoint, puedes mantener el formulario estático como placeholder.
+            #}
+            <form id="crear-paquete-form" method="post" action="">
+                {% csrf_token %}
                 <div>
                     <label for="destinatario">ID Destinatario:</label>
                     <input type="number" id="destinatario" name="destinatario" required />
@@ -55,7 +68,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Aquí insertaremos filas dinámicamente -->
+                    <!-- Aquí, si quieres, vas a inyectar filas con datos que la misma vista entregue. -->
                 </tbody>
             </table>
             <div id="paquetes-error" style="color: red;"></div>
@@ -67,7 +80,7 @@
         <section>
             <h2>Conductores Registrados</h2>
             <ul id="lista-conductores">
-                <!-- Aquí insertaremos la lista de conductores -->
+                <!-- Aquí insertaremos la lista de conductores si la vista la pasa en el contexto. -->
             </ul>
             <div id="conductores-error" style="color: red;"></div>
         </section>
@@ -93,15 +106,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Filas de historial -->
+                    <!-- Filas de historial, a inyectar desde la vista si corresponde. -->
                 </tbody>
             </table>
         </section>
 
     </div>
-
-    <!-- Carga auth.js y app.js -->
-    <script src="{% static 'js/auth.js' %}"></script>
-    <script src="{% static 'js/app.js' %}"></script>
 </body>
 </html>

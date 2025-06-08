@@ -1,9 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from services import get_route_JSON, get_trip_JSOM
 
 class CalculaRutaAPIView(APIView):
     permission_classes = [IsAuthenticated]
+    base_url = "http://router.project-osrm.org"
 
     def get(self, request):
         # Más adelante, aquí llamaremos a un servicio externo para calcular rutas.

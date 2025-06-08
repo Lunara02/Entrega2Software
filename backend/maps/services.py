@@ -1,9 +1,8 @@
 import requests
 
-base_url = "http://router.project-osrm.org"
 
 
-def get_route_JSON(origin, destination):
+def get_route_JSON(base_url,origin, destination):
     """
         Calcula la ruta más rápida entre 'origin' y 'destination'.
 
@@ -30,7 +29,7 @@ def get_route_JSON(origin, destination):
     response.raise_for_status()
     return response.json()
 
-def get_trip_JSOM(waypoints):
+def get_trip_JSON(base_url,waypoints):
     """
         Calcula la ruta más rápida entre múltiples puntos de paso.
 

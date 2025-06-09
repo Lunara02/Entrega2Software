@@ -3,8 +3,10 @@
 from pathlib import Path
 import os
 import dj_database_url
+from dotenv import load_dotenv, find_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(find_dotenv())  # Cargar variables de entorno desde .env
 
 SECRET_KEY = 'tu-clave-secreta'
 DEBUG = True

@@ -25,9 +25,8 @@ Este proyecto es una aplicación web desarrollada con Django para gestionar paqu
 
 Sigue los siguientes pasos para levantar el proyecto en un entorno de desarrollo:
 
-1. **Crear y activar un entorno virtual**
+1. **Activar un entorno virtual**
    ```bash
-   python -m venv venv
    source venv/bin/activate  # En Windows usa `venv\Scripts\activate`
    ```
 2. **Instalar dependencias**

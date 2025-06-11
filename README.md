@@ -7,16 +7,8 @@ Para ejecutar el proyecto es necesario definir las siguientes variables de entor
 - `SECRET_KEY`: Clave secreta de Django.
 - `DATABASE_URL`: URL de conexión a la base de datos.
 - `MAPBOX_TOKEN`: Token de acceso a la API de Mapbox.
-  Puedes obtener uno creando una cuenta gratuita en [Mapbox](https://account.mapbox.com/).
 
 Sin estos valores la aplicación no podrá inicializarse correctamente.
-
-Se incluye un archivo `.env.example` con valores de ejemplo. Copia este archivo a
-`.env` para utilizarlo:
-
-```bash
-cp .env.example .env
-```
 
 Instala las dependencias y ejecuta las migraciones antes de iniciar el
 servidor:
@@ -51,12 +43,3 @@ Sigue los siguientes pasos para levantar el proyecto en un entorno de desarrollo
    ```bash
    python project/manage.py runserver
    ```
-
-## Comandos de gestión principales
-
-- `python project/manage.py runserver` ─ Inicia el servidor en modo desarrollo.
-- `python project/manage.py makemigrations` ─ Crea archivos de migración a partir de los cambios en los modelos.
-- `python project/manage.py migrate` ─ Aplica las migraciones a la base de datos.
-- `python project/manage.py createsuperuser` ─ Genera un usuario administrador para acceder al panel de administración.
-
-Con estos comandos podrás administrar y probar el sistema de logística en tu entorno local.

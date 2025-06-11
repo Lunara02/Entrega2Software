@@ -8,103 +8,119 @@
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 </head>
 <body>
-    <div class="container">
-        <h1>Panel de Usuario</h1>
+  <div class="todo">
+    <div class="form_container">
+      <div class="title_container">
+        <p class="title">Panel de Usuario</p>
+        <span class="subtitle">Administra tus paquetes, conductores y consulta los historiales.</span>
+      </div>
 
-        {# Formulario de logout usando POST al endpoint 'logout' #}
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">Cerrar Sesión</button>
+      <!-- Formulario de logout -->
+      <form method="post" action="{% url 'logout' %}" style="width: 100%;">
+        {% csrf_token %}
+        <button type="submit" class="sign-in_btn">Cerrar Sesión</button>
+      </form>
+
+      <div class="separator">
+        <span class="line"></span>
+        <span>Acciones</span>
+        <span class="line"></span>
+      </div>
+
+      <!-- Crear nuevo paquete -->
+      <section style="width: 100%;">
+        <h2 class="subtitle">Crear Nuevo Paquete</h2>
+        <form id="crear-paquete-form" method="post" action="">
+          {% csrf_token %}
+          <div class="input_container">
+            <label class="input_label" for="destinatario">ID Destinatario</label>
+            <input type="number" id="destinatario" name="destinatario" class="input_field" required>
+          </div>
+          <div class="input_container">
+            <label class="input_label" for="peso">Peso (kg)</label>
+            <input type="number" step="0.01" id="peso" name="peso" class="input_field" required>
+          </div>
+          <div class="input_container">
+            <label class="input_label" for="dimensiones">Dimensiones</label>
+            <input type="text" id="dimensiones" name="dimensiones" class="input_field" required>
+          </div>
+          <button type="submit" class="sign-in_btn">Crear Paquete</button>
         </form>
+        <div id="crear-paquete-error" style="color: red; font-size: 0.75rem;"></div>
+        <div id="crear-paquete-success" style="color: green; font-size: 0.75rem;"></div>
+      </section>
 
-        <hr>
+      <div class="separator">
+        <span class="line"></span>
+        <span>Mis Paquetes</span>
+        <span class="line"></span>
+      </div>
 
-        {# TILIN #}
+      <!-- Listado de mis paquetes -->
+      <section style="width: 100%;">
+        <table id="tabla-paquetes" border="1" cellpadding="5" style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+          <thead>
+            <tr style="background-color: #f0f0f0;">
+              <th>ID</th>
+              <th>Destino</th>
+              <th>Peso</th>
+              <th>Dimensiones</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Aquí se inyectarán las filas dinámicamente -->
+          </tbody>
+        </table>
+        <div id="paquetes-error" style="color: red; font-size: 0.75rem;"></div>
+      </section>
 
-        <!-- Sección: Crear nuevo paquete -->
-        <section>
-            <h2>Crear Nuevo Paquete</h2>
-            {# holaaa #}
-            <form id="crear-paquete-form" method="post" action="">
-                {% csrf_token %}
-                <div>
-                    <label for="destinatario">ID Destinatario:</label>
-                    <input type="number" id="destinatario" name="destinatario" required />
-                </div>
-                <div>
-                    <label for="peso">Peso (kg):</label>
-                    <input type="number" step="0.01" id="peso" name="peso" required />
-                </div>
-                <div>
-                    <label for="dimensiones">Dimensiones:</label>
-                    <input type="text" id="dimensiones" name="dimensiones" required />
-                </div>
-                <button type="submit">Crear Paquete</button>
-            </form>
-            <div id="crear-paquete-error" style="color: red;"></div>
-            <div id="crear-paquete-success" style="color: green;"></div>
-        </section>
+      <div class="separator">
+        <span class="line"></span>
+        <span>Conductores</span>
+        <span class="line"></span>
+      </div>
 
-        <hr>
+      <!-- Conductores registrados -->
+      <section style="width: 100%;">
+        <ul id="lista-conductores" style="list-style: none; padding: 0;">
+          <!-- Aquí se inyectarán los conductores -->
+        </ul>
+        <div id="conductores-error" style="color: red; font-size: 0.75rem;"></div>
+      </section>
 
-        <!-- Sección: Listado de Mis Paquetes -->
-        <section>
-            <h2>Mis Paquetes</h2>
-            <table id="tabla-paquetes" border="1" cellpadding="5">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Destino</th>
-                        <th>Peso</th>
-                        <th>Dimensiones</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Aquí, si quieres, vas a inyectar filas con datos que la misma vista entregue. -->
-                </tbody>
-            </table>
-            <div id="paquetes-error" style="color: red;"></div>
-        </section>
+      <div class="separator">
+        <span class="line"></span>
+        <span>Historial</span>
+        <span class="line"></span>
+      </div>
 
-        <hr>
+      <!-- Historial de estado -->
+      <section style="width: 100%;">
+        <div class="input_container">
+          <label class="input_label" for="paquete-historial">ID de Paquete</label>
+          <input type="number" id="paquete-historial" name="paquete-historial" class="input_field" />
+        </div>
+        <button id="ver-historial-btn" class="sign-in_btn" style="margin-top: 10px;">Ver Historial</button>
+        <div id="historial-error" style="color: red; font-size: 0.75rem;"></div>
 
-        <!-- Sección: Listado de Conductores -->
-        <section>
-            <h2>Conductores Registrados</h2>
-            <ul id="lista-conductores">
-                <!-- Aquí insertaremos la lista de conductores si la vista la pasa en el contexto. -->
-            </ul>
-            <div id="conductores-error" style="color: red;"></div>
-        </section>
-
-        <hr>
-
-        <!-- Sección: Historial de un paquete -->
-        <section>
-            <h2>Historial de Estado</h2>
-            <div>
-                <label for="paquete-historial">Selecciona ID de Paquete:</label>
-                <input type="number" id="paquete-historial" name="paquete-historial" />
-                <button id="ver-historial-btn">Ver Historial</button>
-            </div>
-            <div id="historial-error" style="color: red;"></div>
-            <table id="tabla-historial" border="1" cellpadding="5" style="margin-top: 10px;">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Estado</th>
-                        <th>Fecha</th>
-                        <th>Actualizado por</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Filas de historial, a inyectar desde la vista si corresponde. -->
-                </tbody>
-            </table>
-        </section>
+        <table id="tabla-historial" border="1" cellpadding="5" style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+          <thead>
+            <tr style="background-color: #f0f0f0;">
+              <th>ID</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th>Actualizado por</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Aquí se inyectarán los datos del historial -->
+          </tbody>
+        </table>
+      </section>
 
     </div>
+  </div>
 </body>
 </html>
